@@ -2,10 +2,14 @@ from LSBSteg import LSBSteg as steganography
 import cv2
 from stegano import lsb
 
-secret = lsb.hide('hello.png','hello')
-secret.save('secret.png')
+def checkIfDataIsHidden(imagePath):
+    text = lsb.reveal(imagePath)
+    return text
 
-print(lsb.reveal('hello.png'))
+def addSecret(imagePath,data):    
+    secret = lsb.hide(imagePath,data)
+    secret.save('/temp/editing.png')
+
 
 
 
