@@ -1,4 +1,4 @@
-from LSBSteg import LSBSteg as steganography
+from qt_project.LSBSteg import LSBSteg as steganography
 import cv2
 from stegano import lsb
 
@@ -8,7 +8,7 @@ def checkIfDataIsHidden(imagePath):
 
 def addSecret(imagePath,data):    
     secret = lsb.hide(imagePath,data)
-    secret.save('/temp/editing.png')
+    secret.save(imagePath)
 
 
 

@@ -7,9 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-import file
+from qt_project import file
 import os
-import logic
+from qt_project import logic
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -25,7 +25,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_MainWindow(object):
+class Steganography(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(624, 261)
@@ -137,6 +137,7 @@ class Ui_MainWindow(object):
         self.save_image = QtGui.QPushButton(self.centralwidget)
         self.save_image.setStyleSheet(_fromUtf8("color: rgb(255, 255, 255);"))
         self.save_image.setObjectName(_fromUtf8("save_image"))
+        self.save_image.clicked.connect(lambda : save_image_to_disk(self.save_image))
         self.verticalLayout.addWidget(self.save_image)
         self.horizontalLayout_2.addLayout(self.verticalLayout)
         self.verticalLayout_3.addLayout(self.horizontalLayout_2)
@@ -145,10 +146,6 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def closeEvent(self, *args, **kwargs):
-        print("you just closed the pyqt window!!! you are awesome!!!")
-        super(QtGui.QMainWindow, self).closeEvent(*args, **kwargs)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Steganography", None))
@@ -161,7 +158,7 @@ class Ui_MainWindow(object):
         self.add_hidden.setText(_translate("MainWindow", "Add Hidden Text", None))
         self.save_image.setText(_translate("MainWindow", "Save Image", None))
 
-imagePath = "/temp/editing.jpg"
+imagePath = "/temp/editing.png"
 
 def loadImageInLabel(widget,label):
     try:
@@ -171,26 +168,47 @@ def loadImageInLabel(widget,label):
         print("Please select a valid file")
 
 def checkHiddenMessage(hidden_text_label):
+    cursorLoading()
     try:
         data = logic.checkIfDataIsHidden(os.getcwd() + imagePath)
         hidden_text_label.setText(str(data))
-        hidden_text_label.setStyleSheet("color:#000000")
+        hidden_text_label.setStyleSheet("color:#FFFFFF")
     except FileNotFoundError:
         hidden_text_label.setText("Please Select a Image First")
         hidden_text_label.setStyleSheet("color:#FF0000")
+    normalCursor()
 
 def addHiddenData(edit_widget):
+    cursorLoading()
     data = edit_widget.text()
     print("added data is "+data)
-    # logic.addSecret(imagePath,data)
+    logic.addSecret(os.getcwd() + imagePath,data)
+    normalCursor()
+
+def save_image_to_disk(widget):
+    file.saveImage(widget)
+
+def cursorLoading():
+    QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+
+def normalCursor():
+    QtGui.QApplication.restoreOverrideCursor()
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
     MainWindow = QtGui.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = Steganography()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
+def createWindow():
+    import sys
+    app = QtGui.QApplication(sys.argv)
+    MainWindow = QtGui.QMainWindow()
+    ui = Steganography()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
 
 

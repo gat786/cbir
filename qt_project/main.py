@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+from qt_project import steganography,facial_recognition,image_editing
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -62,6 +63,7 @@ class Ui_MainWindow(object):
 "}"))
         self.stegano_button.setAlignment(QtCore.Qt.AlignCenter)
         self.stegano_button.setObjectName(_fromUtf8("stegano_button"))
+        self.stegano_button.mousePressEvent = self.openSteganoWindow
         self.verticalLayout_2.addWidget(self.stegano_button)
         self.facial_recog_button = QtGui.QLabel(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
@@ -79,6 +81,7 @@ class Ui_MainWindow(object):
 "}"))
         self.facial_recog_button.setAlignment(QtCore.Qt.AlignCenter)
         self.facial_recog_button.setObjectName(_fromUtf8("facial_recog_button"))
+        self.facial_recog_button.mousePressEvent = self.openRecognitionWindow
         self.verticalLayout_2.addWidget(self.facial_recog_button)
         self.image_editing_button = QtGui.QLabel(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
@@ -96,6 +99,7 @@ class Ui_MainWindow(object):
 "}"))
         self.image_editing_button.setAlignment(QtCore.Qt.AlignCenter)
         self.image_editing_button.setObjectName(_fromUtf8("image_editing_button"))
+        self.image_editing_button.mousePressEvent = self.openEditingWindow
         self.verticalLayout_2.addWidget(self.image_editing_button)
         self.verticalLayout.addLayout(self.verticalLayout_2)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -110,6 +114,23 @@ class Ui_MainWindow(object):
         self.facial_recog_button.setText(_translate("MainWindow", "Facial Recognition", None))
         self.image_editing_button.setText(_translate("MainWindow", "Editing", None))
 
+    def openEditingWindow(self, event):
+        self.window = QtGui.QMainWindow()
+        self.ui = image_editing.ImageEditing()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
+    def openSteganoWindow(self, event):
+        self.window = QtGui.QMainWindow()
+        self.ui = steganography.Steganography()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
+    def openRecognitionWindow(self, event):
+        self.window = QtGui.QMainWindow()
+        self.ui = facial_recognition.FacialRecognition()
+        self.ui.setupUi(self.window)
+        self.window.show()
 
 if __name__ == "__main__":
     import sys
@@ -120,3 +141,12 @@ if __name__ == "__main__":
     MainWindow.show()
     sys.exit(app.exec_())
 
+
+def createWindow():
+    import sys
+    app = QtGui.QApplication(sys.argv)
+    MainWindow = QtGui.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
